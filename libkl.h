@@ -1,5 +1,7 @@
 #ifndef LIB_KL_H
 #define LIB_KL_H
+
+#define _GNU_SOURCE
 #include <features.h>
 #include <poll.h>
 #include <pthread.h>
@@ -20,7 +22,10 @@
 #include <sched.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-
+#include <sys/inotify.h>
+#include <sys/ptrace.h>
+#include <sys/epoll.h>
+#include <time.h>
 
 
 void loader(int argc,const char *argv[]);
@@ -247,6 +252,217 @@ int __wrap_mq_timedsend(mqd_t mqdes,
                        size_t msg_len,
                        unsigned int msg_prio,
                        const struct timespec *abs_timeout);
+size_t __wrap_fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+
+size_t __wrap_fwrite(const void *ptr, size_t size, size_t nmemb,
+            FILE *stream);
+
+int __wrap_daemon(int nochdir, int noclose);
+
+pid_t __wrap_vfork();
+
+int __wrap_execve(const char *filename, char *const argv[], char *const envp[]);
+
+int __wrap_execv(const char *path, char *const argv[]);
+
+int __wrap_execvp(const char *filename, char *const argv[]);
+
+int __wrap_execvpe(const char *filename, char *const argv[], char *const envp[]);
+
+int __wrap_fexecve(int fd, char *const argv[], char *const envp[]);
+
+/*
+int __wrap_execl(const char *path, const char *arg, ...);
+
+int __wrap_execlp(const char *file, const char *arg, ...);
+
+int __wrap_execle(const char *path, const char *arg, ...);
+*/
+int __wrap_system(const char *line);
+
+int __wrap_pipe(int fds[2]);
+
+int __wrap_pipe2(int fds[2], int flags);
+
+pid_t __wrap_wait(int* stat_loc);
+
+pid_t __wrap_waitpid(pid_t pid, int *stat_loc, int options);
+
+pid_t __wrap_wait3(int* status, int options, struct rusage *rusage);
+
+pid_t __wrap_wait4(pid_t pid, int* status, int options, struct rusage *rusage);
+/*
+int __wrap___clone2(int (*fn)(void *arg),
+                void *child_stack,
+                int flags,
+                void *arg,
+                int *parent_tidptr,
+                struct user_desc *newtls,
+                int *child_tidptr);
+
+int __wrap_sigvec(int sig, const struct sigvec *vec, struct sigvec *ovec);
+*/
+int __wrap___sigpause(int __sig_or_mask, int __is_sig);
+
+//int __wrap_ioctl(int fd, unsigned long request, ...);
+
+pid_t __wrap_getpid(void);
+
+pid_t __wrap_getppid(void);
+
+int __wrap_kill(pid_t pid, int sig);
+
+pid_t __wrap_tcgetpgrp(int fd);
+
+int __wrap_tcsetpgrp(int fd, pid_t pgrp);
+
+int __wrap_setpgid(pid_t pid, pid_t pgid);
+
+pid_t __wrap_getpgid(pid_t pid);
+
+//pid_t __wrap_getpgrp(void);
+
+pid_t __wrap_getpgrp(pid_t pid);
+
+//int __wrap_setpgrp(void);
+
+int __wrap_setpgrp(pid_t pid, pid_t pgid);
+
+pid_t __wrap_getsid(pid_t pid);
+
+pid_t __wrap_setsid(void);
+
+int __wrap_setgid(gid_t gid);
+
+int __wrap_setuid(uid_t uid);
+
+uid_t __wrap_getuid(void);
+
+uid_t __wrap_geteuid(void);
+
+int __wrap_setenv(const char *name, const char *value, int overwrite);
+
+int __wrap_unsetenv(const char *name);
+
+char * __wrap_realpath(const char *path, char *resolved_path);
+
+int __wrap_access(const char *path, int mode);
+
+int __wrap_clock_getcpuclockid(pid_t pid, clockid_t *clock_id);
+
+int __wrap_timer_create(clockid_t clockid, struct sigevent *sevp,
+                       timer_t *timerid);
+
+int __wrap_timer_delete(timer_t timerid);
+
+int __wrap_timer_settime(timer_t timerid,
+             int flags,
+             const struct itimerspec *new_value,
+             struct itimerspec *old_value);
+
+int __wrap_timer_gettime(timer_t timerid, struct itimerspec *curr_value);
+
+int __wrap_timer_getoverrun(timer_t timerid);
+
+int __wrap_pthread_getcpuclockid(pthread_t thread, clockid_t *clock_id);
+
+int __wrap_clock_getres(clockid_t clk_id, struct timespec *res);
+
+int __wrap_clock_gettime(clockid_t clk_id, struct timespec *tp);
+
+int __wrap_clock_settime(clockid_t clk_id, const struct timespec *tp);
+
+int __wrap_clock_nanosleep(clockid_t clock_id,
+               int flags,
+               const struct timespec *request,
+               struct timespec *remain);
+
+ssize_t __wrap_process_vm_readv(pid_t pid,
+                       const struct iovec *local_iov,
+                       unsigned long liovcnt,
+                       const struct iovec *remote_iov,
+                       unsigned long riovcnt,
+                       unsigned long flags);
+
+ssize_t __wrap_process_vm_writev(pid_t pid,
+                        const struct iovec *local_iov,
+                        unsigned long liovcnt,
+                        const struct iovec *remote_iov,
+                        unsigned long riovcnt,
+                        unsigned long flags);
+
+pid_t __wrap_tcgetsid(int fd);
+
+long __wrap_ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+int __wrap_sched_setaffinity(pid_t pid, size_t cpusetsize,
+                            const cpu_set_t *mask);
+
+int __wrap_sched_getaffinity(pid_t pid, size_t cpusetsize,
+                    cpu_set_t *mask);
+
+int __wrap_sched_setscheduler(pid_t pid, int policy,
+                    const struct sched_param *param);
+
+int __wrap_sched_getscheduler(pid_t pid);
+
+int __wrap_sched_setparam(pid_t pid, const struct sched_param *param);
+
+int __wrap_sched_getparam(pid_t pid, struct sched_param *param);
+
+/*
+int __wrap_getaddrinfo(const char *node,
+           const char *service,
+           const struct addrinfo *hints,
+           struct addrinfo **res);
+*/
+int __wrap_getnameinfo(const struct sockaddr *sa,
+           socklen_t salen,
+           char *host,
+           size_t hostlen,
+           char *serv,
+           size_t servlen,
+           int flags);
+
+struct hostent * __wrap_gethostbyname(const char *name);
+
+struct hostent * __wrap_gethostbyaddr(const void *addr, socklen_t len, int type);
+
+int __wrap___poll_chk(struct pollfd *fds, nfds_t nfds, int timeout, size_t fdslen);
+/*
+int __wrap_pselect(int nfds,
+       fd_set *readfds,
+       fd_set *writefds,
+       fd_set *exceptfds,
+       const sigset_t *sigmask);
+*/
+int __wrap_signalfd(int fd, const sigset_t *mask, int flags);
+
+int __wrap_eventfd(unsigned int initval, int flags);
+
+int __wrap_epoll_create(int size);
+
+int __wrap_epoll_create1(int flags);
+/*
+int __wrap_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+
+int __wrap_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+*/
+int __wrap_inotify_init(void);
+int __wrap_inotify_init1(int flags);
+int __wrap_inotify_add_watch(int fd, const char *pathname, uint32_t mask);
+int __wrap_inotify_rm_watch(int fd, int wd);
+FILE * __wrap_tmpfile();
+int __wrap_mkostemp(char *template, int flags);
+int __wrap_mkstemps(char *template, int suffixlen);
+int __wrap_mkostemps(char *template, int suffixlen, int flags);
+int __wrap_creat(const char *path, mode_t mode);
+int __wrap_creat64(const char *path, mode_t mode);
+char * __wrap_ttyname(int fd);
+int __wrap_fseek(FILE *stream, long offset, int whence);
+long __wrap_ftell(FILE *stream);
+void __wrap_rewind(FILE *stream);
+int __wrap_fgetpos(FILE *stream, fpos_t *pos);
+int __wrap_fsetpos(FILE *stream, const fpos_t *pos);
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -460,8 +676,6 @@ ssize_t __real_msgrcv(int msqid,
                     long msgtyp,
                     int msgflg);
 int __real_msgctl(int msqid, int cmd, struct msqid_ds *buf);
-
-
 mqd_t __real_mq_open(const char *name,
                    int oflag,
                    mode_t mode,
@@ -478,4 +692,153 @@ int __real_mq_timedsend(mqd_t mqdes,
                       size_t msg_len,
                       unsigned int msg_prio,
                       const struct timespec *abs_timeout);
+size_t __real_fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+size_t __real_fwrite(const void *ptr, size_t size, size_t nmemb,
+             FILE *stream);
+int __real_daemon(int nochdir, int noclose);
+pid_t __real_vfork();
+int __real_execve(const char *filename, char *const argv[], char *const envp[]);
+int __real_execv(const char *path, char *const argv[]);
+int __real_execvp(const char *filename, char *const argv[]);
+int __real_execvpe(const char *filename, char *const argv[], char *const envp[]);
+int __real_fexecve(int fd, char *const argv[], char *const envp[]);
+/*
+int __real_execl(const char *path, const char *arg, ...);
+
+int __real_execlp(const char *file, const char *arg, ...);
+
+int __real_execle(const char *path, const char *arg, ...);
+*/
+int __real_system(const char *line);
+int __real_pipe(int fds[2]);
+int __real_pipe2(int fds[2], int flags);
+pid_t __real_wait(int* stat_loc);
+pid_t __real_waitpid(pid_t pid, int *stat_loc, int options);
+pid_t __real_wait3(int* status, int options, struct rusage *rusage);
+pid_t __real_wait4(pid_t pid, int* status, int options, struct rusage *rusage);
+/*
+int __real___clone2(int (*fn)(void *arg),
+                 void *child_stack,
+                 int flags,
+                 void *arg,
+                 int *parent_tidptr,
+                 struct user_desc *newtls,
+                 int *child_tidptr);
+
+int __real_sigvec(int sig, const struct sigvec *vec, struct sigvec *ovec);
+*/
+int __real___sigpause(int __sig_or_mask, int __is_sig);
+//int __real_ioctl(int fd, unsigned long request, ...);
+pid_t __real_getpid(void);
+pid_t __real_getppid(void);
+int __real_kill(pid_t pid, int sig);
+pid_t __real_tcgetpgrp(int fd);
+int __real_tcsetpgrp(int fd, pid_t pgrp);
+int __real_setpgid(pid_t pid, pid_t pgid);
+pid_t __real_getpgid(pid_t pid);
+//pid_t __real_getpgrp(void);
+pid_t __real_getpgrp(pid_t pid);
+//int __real_setpgrp(void);
+int __real_setpgrp(pid_t pid, pid_t pgid);
+pid_t __real_getsid(pid_t pid);
+pid_t __real_setsid(void);
+int __real_setgid(gid_t gid);
+int __real_setuid(uid_t uid);
+uid_t __real_getuid(void);
+uid_t __real_geteuid(void);
+int __real_setenv(const char *name, const char *value, int overwrite);
+int __real_unsetenv(const char *name);
+char * __real_realpath(const char *path, char *resolved_path);
+int __real_access(const char *path, int mode);
+int __real_clock_getcpuclockid(pid_t pid, clockid_t *clock_id);
+int __real_timer_create(clockid_t clockid, struct sigevent *sevp,
+                        timer_t *timerid);
+int __real_timer_delete(timer_t timerid);
+int __real_timer_settime(timer_t timerid,
+              int flags,
+              const struct itimerspec *new_value,
+              struct itimerspec *old_value);
+int __real_timer_gettime(timer_t timerid, struct itimerspec *curr_value);
+int __real_timer_getoverrun(timer_t timerid);
+int __real_pthread_getcpuclockid(pthread_t thread, clockid_t *clock_id);
+int __real_clock_getres(clockid_t clk_id, struct timespec *res);
+int __real_clock_gettime(clockid_t clk_id, struct timespec *tp);
+int __real_clock_settime(clockid_t clk_id, const struct timespec *tp);
+int __real_clock_nanosleep(clockid_t clock_id,
+                int flags,
+                const struct timespec *request,
+                struct timespec *remain);
+ssize_t __real_process_vm_readv(pid_t pid,
+                        const struct iovec *local_iov,
+                        unsigned long liovcnt,
+                        const struct iovec *remote_iov,
+                        unsigned long riovcnt,
+                        unsigned long flags);
+ssize_t __real_process_vm_writev(pid_t pid,
+                         const struct iovec *local_iov,
+                         unsigned long liovcnt,
+                         const struct iovec *remote_iov,
+                         unsigned long riovcnt,
+                         unsigned long flags);
+pid_t __real_tcgetsid(int fd);
+long __real_ptrace(enum __ptrace_request request, pid_t pid, void *addr, void *data);
+int __real_sched_setaffinity(pid_t pid, size_t cpusetsize,
+                             const cpu_set_t *mask);
+int __real_sched_getaffinity(pid_t pid, size_t cpusetsize,
+                     cpu_set_t *mask);
+int __real_sched_setscheduler(pid_t pid, int policy,
+                     const struct sched_param *param);
+int __real_sched_getscheduler(pid_t pid);
+int __real_sched_setparam(pid_t pid, const struct sched_param *param);
+int __real_sched_getparam(pid_t pid, struct sched_param *param);
+/*
+int __real_getaddrinfo(const char *node,
+            const char *service,
+            const struct addrinfo *hints,
+            struct addrinfo **res);
+*/
+int __real_getnameinfo(const struct sockaddr *sa,
+            socklen_t salen,
+            char *host,
+            size_t hostlen,
+            char *serv,
+            size_t servlen,
+            int flags);
+struct hostent * __real_gethostbyname(const char *name);
+struct hostent * __real_gethostbyaddr(const void *addr, socklen_t len, int type);
+int __real___poll_chk(struct pollfd *fds, nfds_t nfds, int timeout, size_t fdslen);
+/*
+int __real_pselect(int nfds,
+        fd_set *readfds,
+        fd_set *writefds,
+        fd_set *exceptfds,
+        const struct timespec *timeout,
+        const sigset_t *sigmask);
+*/
+int __real_signalfd(int fd, const sigset_t *mask, int flags);
+int __real_eventfd(unsigned int initval, int flags);
+int __real_epoll_create(int size);
+int __real_epoll_create1(int flags);
+/*
+int __real_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+
+int __real_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+*/
+int __real_inotify_init(void);
+int __real_inotify_init1(int flags);
+int __real_inotify_add_watch(int fd, const char *pathname, uint32_t mask);
+int __real_inotify_rm_watch(int fd, int wd);
+FILE * __real_tmpfile();
+int __real_mkostemp(char *template, int flags);
+int __real_mkstemps(char *template, int suffixlen);
+int __real_mkostemps(char *template, int suffixlen, int flags);
+int __real_creat(const char *path, mode_t mode);
+int __real_creat64(const char *path, mode_t mode);
+char * __real_ttyname(int fd);
+int __real_ttyname_r(int fd, char *buf, size_t buflen);
+int __real_fseek(FILE *stream, long offset, int whence);
+long __real_ftell(FILE *stream);
+void __real_rewind(FILE *stream);
+int __real_fgetpos(FILE *stream, fpos_t *pos);
+int __real_fsetpos(FILE *stream, const fpos_t *pos);
 #endif

@@ -1,0 +1,33 @@
+Implement these-
+execl     }
+execle    }These are variable parameter functions
+execlp    }
+ioctl     }
+===================================================================================
+
+
+int __wrap_sigvec(int sig, const struct sigvec *vec, struct sigvec *ovec);
+int __real_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+
+int __real_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+int __wrap___clone2(int (*fn)(void *arg),
+                void *child_stack,
+                int flags,
+                void *arg,
+                int *parent_tidptr,
+                struct user_desc *newtls,
+                int *child_tidptr);
+
+int __wrap_getaddrinfo(const char *node,
+           const char *service,
+           const struct addrinfo *hints,
+           struct addrinfo **res);
+
+int __wrap_pselect(int nfds,
+      fd_set *readfds,
+      fd_set *writefds,
+      fd_set *exceptfds,
+      const sigset_t *sigmask);
+==================================================================================================
+int __real_setpgrp(void);
+//pid_t __real_getpgrp(void);

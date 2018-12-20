@@ -166,10 +166,10 @@ const int ENDLIST = -1;
     return passed;                                                             \
   }
 
-
 /* a safe string modifier for printf, if it is null, print out that fact */
 #define STR(x) \
   (((x) == NULL) ? "(null)" : (x))
+
 
 /* do not change this passage, the test program has hard coded values that
    assume the length of the passage is what you see here */

@@ -14,11 +14,15 @@ void hello()
 int main(int argc, char const *argv[]) {
   printf("In application\n");
   printf("Hello. I m back\n");
-  if(open("abc",O_RDONLY)==-1){
+  int a=100;
+  FILE* fp=fopen("abc","w");
+  if(fp==NULL){
     printf("Can't open file\n" );
   }else
   printf("File Opened\n");
-  hello();
+  if(fwrite(&a,sizeof(a),1,fp)==0){
+    printf("write failed\n" );
+  }
   int i=0;
   while (1) {
     printf("%d ", i);
@@ -26,7 +30,6 @@ int main(int argc, char const *argv[]) {
     sleep(1);
     i++;
   }
-
   return 0;
 }
 

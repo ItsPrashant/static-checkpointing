@@ -147,7 +147,7 @@ get_symbol_offset(const char *libname, const char *symbol)
     }
   }
   if (strtab) {
-    free(strtab);
+    __real_free(strtab);
   }
   __real_close(fd);
   if (result == -1) {
@@ -352,7 +352,7 @@ getSymbolTable(const char *libname, Elf64_Shdr *symtab, char **strtab)
         assert(debugName);
         snprintf(debugLibName, sizeof debugLibName, "%s/%s",
                  DEBUG_FILES_PATH, debugName);
-        free(debugName);
+        __real_free(debugName);
         foundDebugLib = 1;
       }
     }
@@ -367,7 +367,7 @@ getSymbolTable(const char *libname, Elf64_Shdr *symtab, char **strtab)
          libname, lname);
     retries++;
   }
-  free(shsectData);
+  __real_free(shsectData);
   if (retries == 2 && !symtab_found) {
     DLOG(ERROR, "Failed to find symbol table in %s\n", libname);
     __real_close(fd);
