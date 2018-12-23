@@ -7317,3 +7317,75 @@ int __wrap_fsetpos(FILE *stream, const fpos_t *pos) {
    return ret;
 
 }
+
+FILE *__wrap_fdopen(int fd, const char *mode) {
+   static FILE * (*fncPtr)(int fd, const char *mode);
+   FILE * ret;
+ if(dmtcp_loaded==1) {
+
+     if(set_fs_dmtcp()==-1){
+         fprintf(stderr, "Error setting fs\n" );
+         exit(-1);
+   }
+
+   if(fncPtr==NULL)
+    {
+       fncPtr=(*mydlsym)(soPtr,"fdopen");
+       if(fncPtr==NULL){
+           fprintf(stderr, "*** DMTCP: Error: lookup failed for %s.\n" \
+                      "           The symbol wasn't found in current library" \
+                      " loading sequence.\n"       \
+                       "    Aborting.\n","fdopen");  \
+            abort();
+       }
+    }
+
+   ret=(*fncPtr)(fd, mode);
+   if(set_fs_application()==-1){
+         fprintf(stderr, "Error setting fs\n" );
+         exit(-1);
+    }
+
+ }
+ else{
+     ret=__real_fdopen(fd, mode);
+  }
+   return ret;
+
+}
+
+FILE *__wrap_freopen(const char *pathname, const char *mode, FILE *stream) {
+   static FILE * (*fncPtr)(const char *pathname, const char *mode, FILE *stream);
+   FILE * ret;
+ if(dmtcp_loaded==1) {
+
+     if(set_fs_dmtcp()==-1){
+         fprintf(stderr, "Error setting fs\n" );
+         exit(-1);
+   }
+
+   if(fncPtr==NULL)
+    {
+       fncPtr=(*mydlsym)(soPtr,"freopen");
+       if(fncPtr==NULL){
+           fprintf(stderr, "*** DMTCP: Error: lookup failed for %s.\n" \
+                      "           The symbol wasn't found in current library" \
+                      " loading sequence.\n"       \
+                       "    Aborting.\n","freopen");  \
+            abort();
+       }
+    }
+
+   ret=(*fncPtr)(pathname, mode, stream);
+   if(set_fs_application()==-1){
+         fprintf(stderr, "Error setting fs\n" );
+         exit(-1);
+    }
+
+ }
+ else{
+     ret=__real_freopen(pathname, mode, stream);
+  }
+   return ret;
+
+}
